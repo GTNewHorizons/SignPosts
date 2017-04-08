@@ -1,0 +1,15 @@
+[
+{
+  "modid": "signposts",
+  "name": "Sign-Posts",
+  "description": "Fast-travel between sign-posts. Sign-Posts are auto-added to Antique Atlases",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["harceroi"],
+  "credits": "harceroi, for Antique Atlas: Hunternif, coolAlias, Kenkron, TheCodeWarrior.
+  "screenshots": [],
+  "dependencies": [antiqueatlas]
+}
+]
