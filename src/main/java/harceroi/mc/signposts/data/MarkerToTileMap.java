@@ -1,9 +1,10 @@
 package harceroi.mc.signposts.data;
 
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
 import harceroi.mc.signposts.SignPostsMod;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -24,24 +25,25 @@ public class MarkerToTileMap extends WorldSavedData {
   public MarkerToTileMap(String s) {
     super(s);
   }
-  
+
   public static MarkerToTileMap get(World world) {
-    // MarkerToTileMap data = (MarkerToTileMap) world.loadItemData(MarkerToTileMap.class, DATA_NAME);
-    
+    // MarkerToTileMap data = (MarkerToTileMap)
+    // world.loadItemData(MarkerToTileMap.class, DATA_NAME);
+
     MapStorage storage = world.perWorldStorage;
     MarkerToTileMap data = (MarkerToTileMap) storage.loadData(MarkerToTileMap.class, DATA_NAME);
-    
-    if(data == null){
+
+    if (data == null) {
       data = new MarkerToTileMap();
       storage.setData(DATA_NAME, data);
     }
-    
+
     return data;
   }
 
   @Override
   public void readFromNBT(NBTTagCompound compound) {
-        
+
     System.out.println("Reading SignPosts Data");
     NBTTagList nbtList = compound.getTagList("arrayList", 10);
     for (int i = 0; i < nbtList.tagCount(); i++) {
@@ -83,8 +85,8 @@ public class MarkerToTileMap extends WorldSavedData {
     tileMap.put(new Integer(markerId), new int[] { x, y, z });
     setDirty(true);
   }
-  
-  public void removeMarker(int markerId){
+
+  public void removeMarker(int markerId) {
     tileMap.remove(new Integer(markerId));
     setDirty(true);
   }
@@ -92,5 +94,16 @@ public class MarkerToTileMap extends WorldSavedData {
   public int[] getTileForMarker(int markerId) {
     System.out.println("Get From map");
     return tileMap.get(new Integer(markerId));
+  }
+
+  public int getMarkerForTile(int x, int y, int z) {
+    Set<Entry<Integer, int[]>> set = tileMap.entrySet();
+    for (Entry<Integer, int[]> entry : set) {
+      int[] mapCoords = entry.getValue();
+      if (mapCoords[0] == x && mapCoords[1] == y && mapCoords[2] == z){
+        return entry.getKey();
+      }
+    }
+    return -1;
   }
 }

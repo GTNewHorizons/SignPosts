@@ -10,7 +10,7 @@ public class JumpMessageHandler implements IMessageHandler<JumpMessage, IMessage
   @Override
   public IMessage onMessage(JumpMessage msg, MessageContext ctx) {
 
-    SignPostsMod.playerJump(msg.getMarkerId(), ctx.getServerHandler().playerEntity);
+    SignPostsMod.playerJump(msg.getMarkerId(), ctx.getServerHandler().playerEntity, msg.getPaymentHandler());
 
     return null;
   }

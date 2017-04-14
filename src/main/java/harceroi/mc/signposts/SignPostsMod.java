@@ -2,7 +2,9 @@ package harceroi.mc.signposts;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -13,6 +15,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import harceroi.mc.signposts.block.SignPostBlock;
 import harceroi.mc.signposts.block.SignPostTileEntity;
 import harceroi.mc.signposts.data.MarkerToTileMap;
+import harceroi.mc.signposts.integration.IPaymentHandler;
+import harceroi.mc.signposts.integration.gollorum.GollorumPaymentHandler;
 import harceroi.mc.signposts.item.SignPostMarkerItem;
 import harceroi.mc.signposts.network.SignPostsNetworkHelper;
 import hunternif.mc.atlas.AntiqueAtlasMod;
@@ -28,7 +32,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 @Mod(modid = SignPostsMod.ID, name = SignPostsMod.NAME, version = SignPostsMod.VERSION, dependencies = "required-after:antiqueatlas")
@@ -36,13 +40,20 @@ public class SignPostsMod {
   public static final String ID = "signposts";
   public static final String NAME = "Sign-Posts";
   public static final String CHANNEL = ID;
-  public static final String VERSION = "1.0.0";
+  public static final String VERSION = "1.1.0";
 
   public static final String aaModName = "antiqueatlas";
   public static final String aaItemName = "antiqueAtlas";
 
   public static final String MARKERTYPE = "signPost";
   
+  // Integration
+  
+  private static HashMap<String, IPaymentHandler> paymentHandlers = new HashMap<String, IPaymentHandler>();
+
+  // Gollorum integration
+  public static final String GOLLORUM_SIGNPOST_MOD_ID = "signpost";
+
   private SignPostMarkerItem markerItem;
   private SignPostBlock signPostBlock;
 
@@ -68,28 +79,22 @@ public class SignPostsMod {
     markerItem.setCreativeTab(CreativeTabs.tabTools);
     markerItem.setTextureName(SignPostsMod.ID + ":emeraldSignPostMarker");
     GameRegistry.registerItem(markerItem, "signPostMarker");
+    SignPostsMod.addPaymentHandler(new PaymentHandler(), ID);
+    
+    if (Loader.isModLoaded(GOLLORUM_SIGNPOST_MOD_ID)) {
+      MinecraftForge.EVENT_BUS.register(new harceroi.mc.signposts.integration.gollorum.GollorumEventHandler());
+      SignPostsMod.addPaymentHandler(new GollorumPaymentHandler(), GOLLORUM_SIGNPOST_MOD_ID);
+    }
   }
 
   @EventHandler
   public void init(FMLInitializationEvent event) {
     proxy.init(event);
     SignPostsNetworkHelper.registerMessageHandlers();
-    
-    GameRegistry.addRecipe(new ItemStack(markerItem), new Object[]{
-        ".E.",
-        ".E.",
-        ".E.",
-        'E',
-        Items.emerald
-    });
-    
-    IRecipe blockRecipe = new ShapedOreRecipe(new ItemStack(signPostBlock), new Object[]{
-        ".WS",
-        ".WS",
-        ".W.",
-        'W', "plankWood",
-        'S', Items.sign
-    });
+
+    GameRegistry.addRecipe(new ItemStack(markerItem), new Object[] { ".E.", ".E.", ".E.", 'E', Items.emerald });
+
+    IRecipe blockRecipe = new ShapedOreRecipe(new ItemStack(signPostBlock), new Object[] { ".WS", ".WS", ".W.", 'W', "plankWood", 'S', Items.sign });
     GameRegistry.addRecipe(blockRecipe);
   }
 
@@ -111,14 +116,14 @@ public class SignPostsMod {
       int markerId = addGlobalMarker(signX, signZ, label, player.worldObj);
       signPost.setAsJumpLocation(jumpX, jumpY, jumpZ, markerId);
       MarkerToTileMap.get(player.worldObj).setTileForMarker(signX, signY, signZ, markerId);
-      ItemStack currentItemStack =  player.getCurrentEquippedItem();
-      if(currentItemStack != null && currentItemStack.getItem() instanceof SignPostMarkerItem){
+      ItemStack currentItemStack = player.getCurrentEquippedItem();
+      if (currentItemStack != null && currentItemStack.getItem() instanceof SignPostMarkerItem) {
         currentItemStack.damageItem(1, player);
-        if (currentItemStack.getItemDamage() == currentItemStack.getMaxDamage()){
+        if (currentItemStack.getItemDamage() == currentItemStack.getMaxDamage()) {
           player.destroyCurrentEquippedItem();
         }
       }
-      
+
     }
   }
 
@@ -128,50 +133,54 @@ public class SignPostsMod {
     if (tileEntity instanceof SignPostTileEntity) {
       SignPostTileEntity signPost = (SignPostTileEntity) tileEntity;
       int markerId = signPost.getMarkerId();
-      if(markerId != 0){
+      if (markerId != 0) {
         removeGlobalMarker(markerId, world);
-        MarkerToTileMap.get(world).removeMarker(markerId);        
+        MarkerToTileMap.get(world).removeMarker(markerId);
       }
     }
   }
 
-  private static int addGlobalMarker(int x, int z, String label, World world) {
+  public static int addGlobalMarker(int x, int z, String label, World world) {
     MarkersData data = AntiqueAtlasMod.globalMarkersData.getData();
     Marker marker = data.createAndSaveMarker(MARKERTYPE, label, world.provider.dimensionId, x, z, false);
     PacketDispatcher.sendToAll(new MarkersPacket(world.provider.dimensionId, marker));
     return marker.getId();
   }
-  
-  private static void removeGlobalMarker(int markerId, World world){
+
+  public static void removeGlobalMarker(int markerId, World world) {
     AtlasAPI.markers.deleteGlobalMarker(world, markerId);
   }
 
-  public static void playerJump(int markerId, EntityPlayerMP player) {
-
+  public static void playerJump(int markerId, EntityPlayerMP player, String paymentHandlerKey) {
+    IPaymentHandler paymentHandler = paymentHandlers.get(paymentHandlerKey);
     int[] coords = MarkerToTileMap.get(player.worldObj).getTileForMarker(markerId);
     System.out.println("I got coords:");
     System.out.println(coords);
     // Get tile Entity
     if (coords != null) {
+      double jumpX = (double) (coords[0]) + 0.5;
+      double jumpY = (double) (coords[1]) + 1;
+      double jumpZ = (double) (coords[2]) + 0.5;
       TileEntity tileEntity = player.worldObj.getTileEntity(coords[0], coords[1], coords[2]);
       if (tileEntity instanceof SignPostTileEntity) {
         SignPostTileEntity tile = (SignPostTileEntity) tileEntity;
-        double jumpX = tile.getJumpX();
-        double jumpY = tile.getJumpY();
-        double jumpZ = tile.getJumpZ();
-        
-        System.out.println("Jump Data? " + jumpX);
+        jumpX = tile.getJumpX();
+        jumpY = tile.getJumpY();
+        jumpZ = tile.getJumpZ();
+      }
+      System.out.println("Jump Data? " + jumpX + ", " + jumpY + ", " + jumpZ);
 
-        if (jumpX != 0 && jumpY != 0 && jumpZ != 0) {
-          // jumping is exhausting!
-          double distance = Math.pow(Math.abs(player.posX - (int) jumpX), 2) + Math.pow(Math.abs(player.posY - (int) jumpY), 2) + Math.pow(Math.abs(player.posZ - (int) jumpZ), 2);
-          int exhaustion = Math.min((Math.floorDiv((int) distance, 10000)), 10);
-          player.getFoodStats().addStats(-1*exhaustion, 0.0F);
+      if (jumpX != 0 && jumpY != 0 && jumpZ != 0) {
+        // PAY
+        if(paymentHandler.pay(player, (int) jumpX, (int) jumpY, (int) jumpZ)){
           // jump!
           player.setPositionAndUpdate(jumpX, jumpY, jumpZ);
-        }
-
+        };
       }
     }
+  }
+  
+  public static void addPaymentHandler(IPaymentHandler paymentHandler, String name){
+    paymentHandlers.put(name, paymentHandler);
   }
 }

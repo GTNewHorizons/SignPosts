@@ -7,7 +7,6 @@ import harceroi.mc.signposts.atlas.gui.SignPostsAtlasGui;
 import harceroi.mc.signposts.block.SignPostRenderer;
 import harceroi.mc.signposts.block.SignPostTileEntity;
 import harceroi.mc.signposts.gui.SignPostLabelGui;
-import hunternif.mc.atlas.AntiqueAtlasMod;
 import hunternif.mc.atlas.api.AtlasAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -32,11 +31,12 @@ public class ClientProxy extends CommonProxy {
     atlasGui = new SignPostsAtlasGui();
     labelGui = new SignPostLabelGui();
   }
-
-  public void openAtlasGui(ItemStack stack) {
+  
+  @Override
+  public void openAtlasGui(ItemStack stack, String paymentHandlerKey) {
     Minecraft mc = Minecraft.getMinecraft();
     if (mc.currentScreen == null) {
-      mc.displayGuiScreen(atlasGui.setAtlasItemStack(stack));
+      mc.displayGuiScreen(atlasGui.setAtlasItemStack(stack).setPaymentHandlerKey(paymentHandlerKey));
     }
   }
 
@@ -47,7 +47,4 @@ public class ClientProxy extends CommonProxy {
       mc.displayGuiScreen(labelGui.setJumpTargetValues(signX, signY, signZ, jumpX, jumpY, jumpZ));
     }
   }
-
-  
-
 }

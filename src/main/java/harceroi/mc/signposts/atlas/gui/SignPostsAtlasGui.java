@@ -150,6 +150,8 @@ public class SignPostsAtlasGui extends GuiComponent {
 
   /** Coordinate scale factor relative to the actual screen size. */
   private int screenScale;
+  
+  private String paymentHandlerKey;
 
   @SuppressWarnings("rawtypes")
   public SignPostsAtlasGui() {
@@ -202,6 +204,12 @@ public class SignPostsAtlasGui extends GuiComponent {
     }
     return this;
   }
+  
+  
+  public SignPostsAtlasGui setPaymentHandlerKey(String paymentHandlerKey){
+    this.paymentHandlerKey = paymentHandlerKey;
+    return this;
+  }
 
   public void loadSavedBrowsingPosition() {
     // Apply zoom first, because browsing position depends on it:
@@ -232,7 +240,7 @@ public class SignPostsAtlasGui extends GuiComponent {
     if (isMouseOverMap && toJump != null){
       System.out.println("JUMP!");
       System.out.println("Marker ID: " + toJump.getId());
-      JumpMessage msg = new JumpMessage(toJump.getId()); 
+      JumpMessage msg = new JumpMessage(toJump.getId(), paymentHandlerKey); 
       SignPostsNetworkHelper.sendJumpMessage(msg);
       close();
     } else if (isMouseOverMap && selectedButton == null) {

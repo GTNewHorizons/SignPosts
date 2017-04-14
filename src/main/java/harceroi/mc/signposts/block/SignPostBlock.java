@@ -65,7 +65,7 @@ public class SignPostBlock extends Block implements ITileEntityProvider {
       }
 
       if (atlasStack != null && signPost.getMarkerId() != 0) {
-        SignPostsMod.proxy.openAtlasGui(atlasStack);
+        SignPostsMod.proxy.openAtlasGui(atlasStack, SignPostsMod.ID);
       }
     }
 

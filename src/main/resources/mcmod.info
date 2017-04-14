@@ -8,8 +8,10 @@
   "url": "",
   "updateUrl": "",
   "authorList": ["harceroi"],
-  "credits": "harceroi, for Antique Atlas: Hunternif, coolAlias, Kenkron, TheCodeWarrior.
+  "credits": "harceroi, for Antique Atlas: Hunternif, coolAlias, Kenkron, TheCodeWarrior.",
   "screenshots": [],
-  "dependencies": [antiqueatlas]
+  "requiredMods" : ["antiqueatlas", "Forge"],
+  "dependencies": ["antiqueatlas", "Forge", "signpost"],
+  "useDependencyInformation": true
 }
 ]

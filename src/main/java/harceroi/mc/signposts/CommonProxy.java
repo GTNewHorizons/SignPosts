@@ -13,7 +13,7 @@ public class CommonProxy {
   public void init(FMLInitializationEvent event) {
   }
 
-  public void openAtlasGui(ItemStack stack) {
+  public void openAtlasGui(ItemStack stack, String paymentHandlerKey) {
 
   }
   
