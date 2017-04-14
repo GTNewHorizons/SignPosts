@@ -1,5 +1,6 @@
 package harceroi.mc.signposts;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import harceroi.mc.signposts.block.SignPostBlock;
 import harceroi.mc.signposts.block.SignPostTileEntity;
+import harceroi.mc.signposts.configuration.ConfigurationHandler;
 import harceroi.mc.signposts.data.MarkerToTileMap;
 import harceroi.mc.signposts.integration.IPaymentHandler;
 import harceroi.mc.signposts.integration.gollorum.GollorumPaymentHandler;
@@ -46,9 +48,9 @@ public class SignPostsMod {
   public static final String aaItemName = "antiqueAtlas";
 
   public static final String MARKERTYPE = "signPost";
-  
+
   // Integration
-  
+
   private static HashMap<String, IPaymentHandler> paymentHandlers = new HashMap<String, IPaymentHandler>();
 
   // Gollorum integration
@@ -65,6 +67,11 @@ public class SignPostsMod {
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
+
+    File configDir = new File(event.getModConfigurationDirectory() + File.separator + ID);
+    configDir.mkdirs();
+    ConfigurationHandler.init(new File(configDir.getAbsolutePath(), "settings.cfg"));
+
     proxy.preInit(event);
 
     signPostBlock = new SignPostBlock();
@@ -80,7 +87,7 @@ public class SignPostsMod {
     markerItem.setTextureName(SignPostsMod.ID + ":emeraldSignPostMarker");
     GameRegistry.registerItem(markerItem, "signPostMarker");
     SignPostsMod.addPaymentHandler(new PaymentHandler(), ID);
-    
+
     if (Loader.isModLoaded(GOLLORUM_SIGNPOST_MOD_ID)) {
       MinecraftForge.EVENT_BUS.register(new harceroi.mc.signposts.integration.gollorum.GollorumEventHandler());
       SignPostsMod.addPaymentHandler(new GollorumPaymentHandler(), GOLLORUM_SIGNPOST_MOD_ID);
@@ -118,12 +125,14 @@ public class SignPostsMod {
       MarkerToTileMap.get(player.worldObj).setTileForMarker(signX, signY, signZ, markerId);
       ItemStack currentItemStack = player.getCurrentEquippedItem();
       if (currentItemStack != null && currentItemStack.getItem() instanceof SignPostMarkerItem) {
-        currentItemStack.damageItem(1, player);
-        if (currentItemStack.getItemDamage() == currentItemStack.getMaxDamage()) {
-          player.destroyCurrentEquippedItem();
+        int maxItemUsages = ConfigurationHandler.getMarkerMaxUsage();
+        if (maxItemUsages != -1) {
+          currentItemStack.damageItem(1, player);
+          if (currentItemStack.getItemDamage() == currentItemStack.getMaxDamage()) {
+            player.destroyCurrentEquippedItem();
+          }
         }
       }
-
     }
   }
 
@@ -172,15 +181,16 @@ public class SignPostsMod {
 
       if (jumpX != 0 && jumpY != 0 && jumpZ != 0) {
         // PAY
-        if(paymentHandler.pay(player, (int) jumpX, (int) jumpY, (int) jumpZ)){
+        if (paymentHandler.pay(player, (int) jumpX, (int) jumpY, (int) jumpZ)) {
           // jump!
           player.setPositionAndUpdate(jumpX, jumpY, jumpZ);
-        };
+        }
+        ;
       }
     }
   }
-  
-  public static void addPaymentHandler(IPaymentHandler paymentHandler, String name){
+
+  public static void addPaymentHandler(IPaymentHandler paymentHandler, String name) {
     paymentHandlers.put(name, paymentHandler);
   }
 }
