@@ -16,15 +16,15 @@ public class ConfigurationHandler {
     
     category = "Payment";
     config.addCustomCategoryComment(category, "Payments for travelling");
-    setDistancePerPayment(config.getInt("distancePerPayment", "Payment", 10000, 0, Integer.MAX_VALUE, "Distance the player can travel for 1 Foodlevel (= half a drumstick in the hungerbar)"));
-    setMaximumPayment(config.getInt("maximumPayment", "Payment", 10, 0, 20, "The maximum payment per travel. 0 makes traveling free."));
+    setDistancePerPayment(config.getInt("distancePerPayment", "Payment", 10000, 1, Integer.MAX_VALUE, "Distance the player can travel for 1 Foodlevel (= half a drumstick in the hungerbar)"));
+    setMaximumPayment(config.getInt("maximumPayment", "Payment", 10, 0, 20, "The maximum payment per travel. 0 makes travelling free."));
     
     category = "Marker";
     config.addCustomCategoryComment(category, "Marker settings");
     // markerMaxUsage
     // -1 infinity
     // 0 no usage at all
-    setMarkerMaxUsage(config.getInt("makerMaxUsage", category, 5, -1, 10, "How often you can use a marker. -1 for Infinity, 0 for disabling markers."));
+    setMarkerMaxUsage(config.getInt("makerMaxUsage", category, 5, -1, 20, "How often you can use a marker. -1 for Infinity, 0 for disabling markers."));
     config.save();
   }
 

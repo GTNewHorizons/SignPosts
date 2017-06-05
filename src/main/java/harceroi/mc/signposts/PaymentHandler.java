@@ -15,7 +15,5 @@ public class PaymentHandler implements IPaymentHandler{
     player.getFoodStats().addStats(-1 * exhaustion, 0.0F);
     return true;
   }
-  
-  
 
 }
