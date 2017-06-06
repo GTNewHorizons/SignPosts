@@ -15,9 +15,9 @@ public class ConfigurationHandler {
     String category;
     
     category = "Payment";
-    config.addCustomCategoryComment(category, "Payments for travelling");
-    setDistancePerPayment(config.getInt("distancePerPayment", "Payment", 10000, 1, Integer.MAX_VALUE, "Distance the player can travel for 1 Foodlevel (= half a drumstick in the hungerbar)"));
-    setMaximumPayment(config.getInt("maximumPayment", "Payment", 10, 0, 20, "The maximum payment per travel. 0 makes travelling free."));
+    config.addCustomCategoryComment(category, "Payments for traveling");
+    setDistancePerPayment(config.getInt("distancePerPayment", "Payment", 10000, 1, Integer.MAX_VALUE, "Distance the player can travel for 1 foodlevel (1 = half a drumstick in the hungerbar)"));
+    setMaximumPayment(config.getInt("maximumPayment", "Payment", 10, 0, 20, "The maximum payment per travel. 0 makes traveling free."));
     
     category = "Marker";
     config.addCustomCategoryComment(category, "Marker settings");
