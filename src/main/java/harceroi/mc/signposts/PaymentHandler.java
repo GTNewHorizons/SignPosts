@@ -11,7 +11,7 @@ public class PaymentHandler implements IPaymentHandler{
     double distance = Math.pow(Math.abs(player.posX - x), 2) + Math.pow(Math.abs(player.posY - y), 2) + Math.pow(Math.abs(player.posZ - z), 2);
     int distancePerHunger = ConfigurationHandler.getDistancePerPayment();
     int maximumHunger = ConfigurationHandler.getMaximumPayment();
-    int exhaustion = Math.min((Math.floorDiv((int) distance, distancePerHunger)), maximumHunger);
+    int exhaustion = (int) Math.min((Math.floor(distance / distancePerHunger)), maximumHunger);
     player.getFoodStats().addStats(-1 * exhaustion, 0.0F);
     return true;
   }

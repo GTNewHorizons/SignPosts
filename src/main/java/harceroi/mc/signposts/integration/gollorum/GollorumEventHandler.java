@@ -4,12 +4,9 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import gollorum.signpost.event.UpdateWaystoneEvent;
 import gollorum.signpost.event.UseSignpostEvent;
 import harceroi.mc.signposts.SignPostsMod;
-import harceroi.mc.signposts.block.SignPostTileEntity;
 import harceroi.mc.signposts.data.MarkerToTileMap;
-import harceroi.mc.signposts.item.SignPostMarkerItem;
 import hunternif.mc.atlas.item.ItemAtlas;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class GollorumEventHandler {
