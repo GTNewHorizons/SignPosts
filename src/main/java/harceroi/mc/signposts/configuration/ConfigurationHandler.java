@@ -24,7 +24,7 @@ public class ConfigurationHandler {
     // markerMaxUsage
     // -1 infinity
     // 0 no usage at all
-    setMarkerMaxUsage(config.getInt("makerMaxUsage", category, 5, -1, 20, "How often you can use a marker. -1 for Infinity, 0 for disabling markers."));
+    setMarkerMaxUsage(config.getInt("markerMaxUsage", category, 5, -1, 20, "How often you can use a marker. -1 for Infinity, 0 for disabling markers."));
     config.save();
   }
 
