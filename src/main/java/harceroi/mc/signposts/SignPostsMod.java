@@ -42,7 +42,7 @@ public class SignPostsMod {
   public static final String ID = "signposts";
   public static final String NAME = "Sign-Posts";
   public static final String CHANNEL = ID;
-  public static final String VERSION = "1.2.0";
+  public static final String VERSION = "1.2.1";
 
   public static final String aaModName = "antiqueatlas";
   public static final String aaItemName = "antiqueAtlas";
