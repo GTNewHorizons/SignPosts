@@ -1,65 +1,81 @@
 package harceroi.mc.signposts.block;
 
+import hunternif.mc.atlas.AntiqueAtlasMod;
+import hunternif.mc.atlas.marker.MarkersData;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.model.ModelSign;
+import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
+import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
-import harceroi.mc.signposts.SignPostsMod;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
 
-public class SignPostRenderer extends TileEntitySpecialRenderer {
+public class SignPostRenderer extends TileEntitySignRenderer {
 
-  private IModelCustom signPostModel;
-  private ResourceLocation signPostTextureLocation;
-  private ResourceLocation signPostModelLocation;
+    private static final ResourceLocation texture = new ResourceLocation("textures/entity/sign.png");
+    private final ModelSign model = new ModelSign();
 
-  public SignPostRenderer() {
-    super();
-    signPostModelLocation = new ResourceLocation(SignPostsMod.ID + ":" + "models/signPost.obj");
-    signPostTextureLocation = new ResourceLocation(SignPostsMod.ID + ":" + "models/signPost.png");
-    signPostModel = AdvancedModelLoader.loadModel(signPostModelLocation);
-  }
+    @Override
+    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float p_147500_8_) {
+        int meta = tileEntity.getBlockMetadata();
+        if(meta >= 4) {
+            return;
+        }
 
-  @Override
-  public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f) {
-    int meta = tileEntity.getBlockMetadata();
-    if (meta == 4) return;
-    
-    GL11.glPushMatrix();
-    if (meta == 0) {
-      GL11.glTranslatef((float) (x + 1.0F), (float) y, (float) (z + 1.0F));
-    } else if (meta == 1) {
-      GL11.glTranslatef((float) x, (float) y, (float) (z + 1.0F));
-      GL11.glRotatef(270, 0.0F, 1.0F, 0.0F);
-    } else if (meta == 2) {
-      GL11.glTranslatef((float) x, (float) y, (float) z);
-      GL11.glRotatef(180, 0.0F, 1.0F, 0.0F);
-    } else if (meta == 3) {
-      GL11.glTranslatef((float) (x + 1.0F), (float) y, (float) z);
-      GL11.glRotatef(90, 0.0F, 1.0F, 0.0F);
+        float realX = 0.5f, realY = 0.5f, rotation = 0f;
+
+        switch(meta) {
+            case 0:
+                realY += 0.13f;
+                break;
+            case 1:
+                realX -= 0.13f;
+                rotation = 90f;
+                break;
+            case 2:
+                realY -= 0.13f;
+                rotation = 180f;
+                break;
+            case 3:
+                realX += 0.13f;
+                rotation = 270f;
+                break;
+        }
+
+        GL11.glPushMatrix();
+        float scale = 0.6666667F;
+
+        GL11.glTranslatef((float)x + realX, (float)y + 1.75F * scale, (float)z + realY);
+        GL11.glRotatef(-rotation, 0.0F, 1.0F, 0.0F);
+        model.signStick.showModel = false;
+
+        bindTexture(texture);
+        GL11.glPushMatrix();
+        GL11.glScalef(scale, -scale, -scale);
+        model.renderSign();
+
+        GL11.glPopMatrix();
+
+        float newScale = 0.016666668F * scale;
+        GL11.glTranslatef(0.0F, 0.5F * scale, 0.07F * scale);
+        GL11.glScalef(newScale, -newScale, newScale);
+        GL11.glNormal3f(0.0F, 0.0F, -1.0F * newScale);
+        GL11.glDepthMask(false);
+
+        SignPostTileEntity signTe = (SignPostTileEntity)tileEntity;
+        if(signTe.text == null) {
+            int id = signTe.getMarkerId();
+            if(id != 0) {
+                MarkersData data = AntiqueAtlasMod.globalMarkersData.getData();
+                signTe.text = data.getMarkerByID(id).getLocalizedLabel();
+            }
+        } else {
+            FontRenderer fontrenderer = func_147498_b();
+            fontrenderer.drawString(signTe.text, -fontrenderer.getStringWidth(signTe.text) / 2, 2 * 10 - 4 * 5, 0);
+        }
+
+        GL11.glDepthMask(true);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glPopMatrix();
     }
-
-    bindTexture(signPostTextureLocation);
-    signPostModel.renderAll();
-
-    // GL11.glPopMatrix();
-    // GL11.glPushMatrix();
-    /*
-    GL11.glEnable(GL11.GL_TEXTURE_2D);
-    GL11.glEnable(GL11.GL_BLEND);
-    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-    OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-    GL11.glColor4f(0.25f, 0.95f, 0.51f, 1.0f);
-    signPostModel.renderAll();
-    
-    GL11.glDisable(GL11.GL_BLEND);
-    GL11.glColor3f(1F, 1F, 1F);
-    */
-    GL11.glPopMatrix();
-    
-  }
-
 }

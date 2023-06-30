@@ -20,10 +20,10 @@ public class ClientProxy extends CommonProxy {
   public void preInit(FMLPreInitializationEvent event) {
     super.preInit(event);
     ClientRegistry.bindTileEntitySpecialRenderer(SignPostTileEntity.class, new SignPostRenderer());
-    
-    ResourceLocation signPostMarkerTextureLocation = new ResourceLocation(SignPostsMod.ID + ":" + "textures/gui/markers/signPost.png");
+
+    ResourceLocation signPostMarkerTextureLocation = new ResourceLocation(SignPostsMod.ID + ":textures/gui/markers/signPost.png");
     AtlasAPI.getMarkerAPI().setTexture("signPost", signPostMarkerTextureLocation);
-    
+
   }
 
   public void init(FMLInitializationEvent event) {
@@ -31,7 +31,7 @@ public class ClientProxy extends CommonProxy {
     atlasGui = new SignPostsAtlasGui();
     labelGui = new SignPostLabelGui();
   }
-  
+
   @Override
   public void openAtlasGui(ItemStack stack, String paymentHandlerKey) {
     Minecraft mc = Minecraft.getMinecraft();

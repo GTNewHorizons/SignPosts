@@ -9,11 +9,11 @@ import net.minecraft.tileentity.TileEntity;
 public class SignPostTileEntity extends TileEntity {
 
   private boolean isBottom;
-  
-  public SignPostTileEntity(){}
-  
+
+  public String text = null;
+
   public SignPostTileEntity(int meta){
-    this.isBottom = (meta != 4);
+    isBottom = (meta != 4);
   }
 
   // Jump Locations
@@ -62,7 +62,7 @@ public class SignPostTileEntity extends TileEntity {
   public int getMarkerId() {
     return getBottom().markerId;
   }
-  
+
   public boolean isBottom(){
     return isBottom;
   }
@@ -88,7 +88,7 @@ public class SignPostTileEntity extends TileEntity {
     readFromNBT(pkt.func_148857_g());
     worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
   }
-  
+
   private SignPostTileEntity getBottom(){
     if(isBottom) return this;
     return (SignPostTileEntity) worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
