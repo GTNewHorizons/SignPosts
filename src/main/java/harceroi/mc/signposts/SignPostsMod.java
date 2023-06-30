@@ -176,7 +176,7 @@ public class SignPostsMod {
 
       if (jumpX != 0 && jumpY != 0 && jumpZ != 0) {
         // PAY
-        if (paymentHandler.pay(player, (int) jumpX, (int) jumpY, (int) jumpZ)) {
+        if (player.capabilities.isCreativeMode || paymentHandler.pay(player, (int) jumpX, (int) jumpY, (int) jumpZ)) {
           // jump!
           player.setPositionAndUpdate(jumpX, jumpY, jumpZ);
         }
