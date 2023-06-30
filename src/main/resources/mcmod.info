@@ -1,17 +1,21 @@
-[
 {
-  "modid": "signposts",
-  "name": "Sign-Posts",
-  "description": "Fast-travel between sign-posts. Sign-Posts are auto-added to Antique Atlases",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["harceroi"],
-  "credits": "harceroi, for Antique Atlas: Hunternif, coolAlias, Kenkron, TheCodeWarrior.",
-  "screenshots": [],
-  "requiredMods" : ["antiqueatlas", "Forge"],
-  "dependencies": ["antiqueatlas", "Forge", "signpost"],
-  "useDependencyInformation": true
+	"modListVersion": 2,
+	"modList": [{
+		"modid": "${modId}",
+		"name": "${modName}",
+		"description": "Fast-travel between sign-posts. Sign-Posts are auto-added to Antique Atlases",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}",
+		"url": "https://github.com/LegacyModdingMC/SignPosts",
+		"updateUrl": "",
+		"authorList": ["harceroi"],
+		"credits": "harceroi, for Antique Atlas: Hunternif, coolAlias, Kenkron, TheCodeWarrior.",
+		"logoFile": "",
+		"screenshots": [],
+		"parent": "",
+		"requiredMods": ["antiqueatlas"],
+		"dependencies": ["antiqueatlas", "signpost"],
+		"dependants": [],
+		"useDependencyInformation": true
+	}]
 }
-]
