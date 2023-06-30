@@ -10,6 +10,9 @@ public class SignPostTileEntity extends TileEntity {
 
   private boolean isBottom;
 
+  // If your IDE says this is not needed it is completely wrong. The mod is worse than useless without this.
+  public SignPostTileEntity(){ }
+
   public String text = null;
 
   public SignPostTileEntity(int meta){
