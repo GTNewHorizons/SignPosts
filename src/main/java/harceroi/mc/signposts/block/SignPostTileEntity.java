@@ -78,8 +78,6 @@ public class SignPostTileEntity extends TileEntity {
 
   @Override
   public Packet getDescriptionPacket() {
-    // Debug
-    System.out.println("[DEBUG]:Server sent tile sync packet");
     NBTTagCompound tagCompound = new NBTTagCompound();
     this.writeToNBT(tagCompound);
     return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, tagCompound);
@@ -87,9 +85,6 @@ public class SignPostTileEntity extends TileEntity {
 
   @Override
   public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-    // Debug
-    System.out.println("[DEBUG]:Client recived tile sync packet");
-
     readFromNBT(pkt.func_148857_g());
     worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
   }

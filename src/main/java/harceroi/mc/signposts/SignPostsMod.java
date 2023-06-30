@@ -116,7 +116,6 @@ public class SignPostsMod {
   }
 
   public static void addJumpTarget(int signX, int signY, int signZ, double jumpX, double jumpY, double jumpZ, String label, EntityPlayerMP player) {
-    System.out.println("Try to add marker at " + signX + ", " + signZ + " to be transported to " + jumpX + ", " + jumpY + ", " + jumpZ + ".");
     TileEntity tileEntity = player.worldObj.getTileEntity(signX, signY, signZ);
     if (tileEntity instanceof SignPostTileEntity) {
       SignPostTileEntity signPost = (SignPostTileEntity) tileEntity;
@@ -137,7 +136,6 @@ public class SignPostsMod {
   }
 
   public static void removeJumpTarget(int signX, int signY, int signZ, World world) {
-    System.out.println("Try to remove marker at " + signX + ", " + signY + ", " + signZ + ".");
     TileEntity tileEntity = world.getTileEntity(signX, signY, signZ);
     if (tileEntity instanceof SignPostTileEntity) {
       SignPostTileEntity signPost = (SignPostTileEntity) tileEntity;
@@ -163,8 +161,6 @@ public class SignPostsMod {
   public static void playerJump(int markerId, EntityPlayerMP player, String paymentHandlerKey) {
     IPaymentHandler paymentHandler = paymentHandlers.get(paymentHandlerKey);
     int[] coords = MarkerToTileMap.get(player.worldObj).getTileForMarker(markerId);
-    System.out.println("I got coords:");
-    System.out.println(coords);
     // Get tile Entity
     if (coords != null) {
       double jumpX = (double) (coords[0]) + 0.5;
@@ -177,7 +173,6 @@ public class SignPostsMod {
         jumpY = tile.getJumpY();
         jumpZ = tile.getJumpZ();
       }
-      System.out.println("Jump Data? " + jumpX + ", " + jumpY + ", " + jumpZ);
 
       if (jumpX != 0 && jumpY != 0 && jumpZ != 0) {
         // PAY
@@ -185,7 +180,6 @@ public class SignPostsMod {
           // jump!
           player.setPositionAndUpdate(jumpX, jumpY, jumpZ);
         }
-        ;
       }
     }
   }

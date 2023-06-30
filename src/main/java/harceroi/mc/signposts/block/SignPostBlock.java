@@ -44,8 +44,6 @@ public class SignPostBlock extends Block implements ITileEntityProvider {
       if (currentItemStack != null && currentItemStack.getItem() instanceof SignPostMarkerItem) {
         if (signPost.getMarkerId() == 0) {
           SignPostsMod.proxy.openSignPostLabelGui(x, y, z, player.posX, Math.floor(player.posY - 1), player.posZ);
-        } else {
-          System.out.println("Sign already activated");
         }
         return false;
       }
@@ -92,9 +90,6 @@ public class SignPostBlock extends Block implements ITileEntityProvider {
       meta = 3;
 
     world.setBlock(x, y + 1, z, this, 4, 2);
-
-    System.out.println("Place a block?");
-
     return meta;
   }
 

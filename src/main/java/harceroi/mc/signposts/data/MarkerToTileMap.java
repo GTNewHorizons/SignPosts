@@ -43,8 +43,6 @@ public class MarkerToTileMap extends WorldSavedData {
 
   @Override
   public void readFromNBT(NBTTagCompound compound) {
-
-    System.out.println("Reading SignPosts Data");
     NBTTagList nbtList = compound.getTagList("arrayList", 10);
     for (int i = 0; i < nbtList.tagCount(); i++) {
       NBTTagCompound nbt = nbtList.getCompoundTagAt(i);
@@ -60,8 +58,6 @@ public class MarkerToTileMap extends WorldSavedData {
 
   @Override
   public void writeToNBT(NBTTagCompound compound) {
-    System.out.println("Writing SignPosts Data");
-
     NBTTagList nbtList = new NBTTagList();
 
     for (Map.Entry<Integer, int[]> entry : tileMap.entrySet()) {
@@ -81,7 +77,6 @@ public class MarkerToTileMap extends WorldSavedData {
   }
 
   public void setTileForMarker(int x, int y, int z, int markerId) {
-    System.out.println("Putting in map");
     tileMap.put(new Integer(markerId), new int[] { x, y, z });
     setDirty(true);
   }
@@ -92,7 +87,6 @@ public class MarkerToTileMap extends WorldSavedData {
   }
 
   public int[] getTileForMarker(int markerId) {
-    System.out.println("Get From map");
     return tileMap.get(new Integer(markerId));
   }
 

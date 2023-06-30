@@ -238,8 +238,6 @@ public class SignPostsAtlasGui extends GuiComponent {
     boolean isMouseOverMap = mouseX >= mapX && mouseX <= mapX + MAP_WIDTH && mouseY >= mapY && mouseY <= mapY + MAP_HEIGHT;
     
     if (isMouseOverMap && toJump != null){
-      System.out.println("JUMP!");
-      System.out.println("Marker ID: " + toJump.getId());
       JumpMessage msg = new JumpMessage(toJump.getId(), paymentHandlerKey); 
       SignPostsNetworkHelper.sendJumpMessage(msg);
       close();
@@ -404,7 +402,6 @@ public class SignPostsAtlasGui extends GuiComponent {
         for (int i = 0; i < renderTimes.length - 1; i++) {
           elapsed += renderTimes[i + 1] - renderTimes[i];
         }
-        System.out.printf("GuiAtlas avg. render time: %.3f\n", elapsed / renderTimes.length);
       }
     }
 
