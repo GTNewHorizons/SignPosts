@@ -76,7 +76,7 @@ public class SignPostsMod {
 
     signPostBlock = new SignPostBlock();
     signPostBlock.setBlockName("signPost");
-    signPostBlock.setBlockTextureName(SignPostsMod.ID + ":signPost");
+    signPostBlock.setBlockTextureName(SignPostsMod.ID + ":sign_post_top");
     signPostBlock.setCreativeTab(CreativeTabs.tabBlock);
     GameRegistry.registerBlock(signPostBlock, "signPost");
     GameRegistry.registerTileEntity(SignPostTileEntity.class, "signPostTileEntity");

@@ -176,7 +176,10 @@ public class SignPostBlock extends Block implements ITileEntityProvider {
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon(int side, int meta) {
-        return Blocks.log.getIcon(3, 0);
+        if(side <= 1) {
+            return blockIcon;
+        }
+        return Blocks.log.getIcon(side, 0);
     }
 
 }
