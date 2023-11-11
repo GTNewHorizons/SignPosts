@@ -8,13 +8,13 @@ import hunternif.mc.atlas.item.ItemAtlas;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Direction;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -78,24 +78,10 @@ public class SignPostBlock extends Block implements ITileEntityProvider {
         return false;
     }
 
-    /**
-     * Called when a block is placed using its ItemBlock. Args: World, X, Y, Z,
-     * side, hitX, hitY, hitZ, block metadata
-     */
     @Override
     public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int meta) {
-        if (meta == 4) {
+        if(meta >= 4) {
             return 4;
-        }
-
-        if (hitX > 0.5 && hitZ > 0.5) {
-            meta = 0;
-        } else if (hitX <= 0.5 && hitZ > 0.5) {
-            meta = 1;
-        } else if (hitX <= 0.5 && hitZ <= 0.5) {
-            meta = 2;
-        } else  if (hitX > 0.5 && hitZ <= 0.5) {
-            meta = 3;
         }
 
         world.setBlock(x, y + 1, z, this, 4, 2);
@@ -103,16 +89,29 @@ public class SignPostBlock extends Block implements ITileEntityProvider {
     }
 
     @Override
-    public boolean canPlaceBlockAt(World world, int x, int y, int z) {
-        boolean isBottom = bottomBlock(world, x, y, z);
-        boolean isEmpty = world.getBlock(x, y, z).isReplaceable(world, x, y, z);
-
-        if (isBottom) {
-            boolean aboveEmpty = world.getBlock(x, y + 1, z).isReplaceable(world, x, y + 1, z);
-            return (isEmpty && aboveEmpty);
+    public void onBlockPlacedBy(World worldIn, int x, int y, int z, EntityLivingBase placer, ItemStack itemIn) {
+        int rotation = MathHelper.floor_double((double)(placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int meta = 0;
+        switch(rotation) {
+            case 0:
+                meta = 2;
+                break;
+            case 1:
+                meta = 3;
+                break;
+            case 2:
+                meta = 0;
+                break;
+            case 3:
+                meta = 1;
+                break;
         }
+        worldIn.setBlockMetadataWithNotify(x, y, z, meta, 2);
+    }
 
-        return super.canPlaceBlockAt(world, x, y, z);
+    @Override
+    public boolean canPlaceBlockAt(World worldIn, int x, int y, int z) {
+        return worldIn.getBlock(x, y, z).isReplaceable(worldIn, x, y, z) && worldIn.getBlock(x, y + 1, z).isReplaceable(worldIn, x, y, z);
     }
 
     @Override
@@ -149,28 +148,9 @@ public class SignPostBlock extends Block implements ITileEntityProvider {
         return true;
     }
 
-    private boolean bottomBlock(World world, int x, int y, int z) {
-        boolean signPostAbove = world.getBlock(x, y + 1, z) instanceof SignPostBlock;
-        if (signPostAbove) {
-            if (world.getBlockMetadata(x, y + 1, z) == 4) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public boolean isBlockSolid(IBlockAccess world, int x, int y, int z, int side) {
         return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
-        if(side <= 1) {
-            Block block = world.getBlock(x,y,z);
-            return !block.isOpaqueCube() || !(block instanceof SignPostBlock);
-        }
-        return true;
     }
 
     @SideOnly(Side.CLIENT)
