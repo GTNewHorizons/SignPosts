@@ -1,6 +1,7 @@
 package harceroi.mc.signposts.block;
 
 import hunternif.mc.atlas.AntiqueAtlasMod;
+import hunternif.mc.atlas.marker.Marker;
 import hunternif.mc.atlas.marker.MarkersData;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelSign;
@@ -67,7 +68,8 @@ public class SignPostRenderer extends TileEntitySignRenderer {
             int id = signTe.getMarkerId();
             if(id != 0) {
                 MarkersData data = AntiqueAtlasMod.globalMarkersData.getData();
-                signTe.text = data.getMarkerByID(id).getLocalizedLabel();
+                Marker marker = data != null ? data.getMarkerByID(id) : null;
+                signTe.text = marker != null ? marker.getLocalizedLabel() : null;
             }
         } else {
             FontRenderer fontrenderer = func_147498_b();
