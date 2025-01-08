@@ -35,7 +35,7 @@
  */
 dependencies {    
 
-		compileOnly("com.github.GTNewHorizons:AntiqueAtlas:4.4.6-GTNH:dev")
+		implementation("com.github.GTNewHorizons:AntiqueAtlas:4.4.6-GTNH:dev")
 		compileOnly('curse.maven:signpost-261837:2922217') {transitive=false}
 		 
 }
