@@ -33,7 +33,6 @@
  *
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
-dependencies {
-    implementation files("libs/antiqueatlas-4.4.5-legacy-dev.jar")
-    implementation files("libs/signpost-1.7.10-1.04-deobf.jar")
+dependencies {    
+		compileOnly("com.github.GTNewHorizons:AntiqueAtlas:4.4.6-GTNH:dev")
 }
