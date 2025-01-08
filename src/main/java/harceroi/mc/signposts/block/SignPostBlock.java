@@ -1,10 +1,5 @@
 package harceroi.mc.signposts.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import harceroi.mc.signposts.SignPostsMod;
-import harceroi.mc.signposts.item.SignPostMarkerItem;
-import hunternif.mc.atlas.item.ItemAtlas;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -17,6 +12,12 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import harceroi.mc.signposts.SignPostsMod;
+import harceroi.mc.signposts.item.SignPostMarkerItem;
+import hunternif.mc.atlas.item.ItemAtlas;
 
 public class SignPostBlock extends Block implements ITileEntityProvider {
 
@@ -36,7 +37,8 @@ public class SignPostBlock extends Block implements ITileEntityProvider {
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float sideX, float sideY, float sideZ) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float sideX,
+        float sideY, float sideZ) {
         if (world.isRemote) {
             TileEntity te = world.getTileEntity(x, y, z);
             if (!(te instanceof SignPostTileEntity)) {
@@ -52,7 +54,8 @@ public class SignPostBlock extends Block implements ITileEntityProvider {
             // the player holding a magic marker?
             if (currentItemStack != null && currentItemStack.getItem() instanceof SignPostMarkerItem) {
                 if (signPost.getMarkerId() == 0) {
-                    SignPostsMod.proxy.openSignPostLabelGui(x, y, z, player.posX, Math.floor(player.posY - 1), player.posZ);
+                    SignPostsMod.proxy
+                        .openSignPostLabelGui(x, y, z, player.posX, Math.floor(player.posY - 1), player.posZ);
                 }
                 return false;
             }
@@ -80,7 +83,7 @@ public class SignPostBlock extends Block implements ITileEntityProvider {
 
     @Override
     public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int meta) {
-        if(meta >= 4) {
+        if (meta >= 4) {
             return 4;
         }
 
@@ -90,9 +93,9 @@ public class SignPostBlock extends Block implements ITileEntityProvider {
 
     @Override
     public void onBlockPlacedBy(World worldIn, int x, int y, int z, EntityLivingBase placer, ItemStack itemIn) {
-        int rotation = MathHelper.floor_double((double)(placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int rotation = MathHelper.floor_double((double) (placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         int meta = 0;
-        switch(rotation) {
+        switch (rotation) {
             case 0:
                 meta = 2;
                 break;
@@ -111,7 +114,10 @@ public class SignPostBlock extends Block implements ITileEntityProvider {
 
     @Override
     public boolean canPlaceBlockAt(World worldIn, int x, int y, int z) {
-        return worldIn.getBlock(x, y, z).isReplaceable(worldIn, x, y, z) && worldIn.getBlock(x, y + 1, z).isReplaceable(worldIn, x, y, z);
+        return worldIn.getBlock(x, y, z)
+            .isReplaceable(worldIn, x, y, z)
+            && worldIn.getBlock(x, y + 1, z)
+                .isReplaceable(worldIn, x, y, z);
     }
 
     @Override
@@ -156,7 +162,7 @@ public class SignPostBlock extends Block implements ITileEntityProvider {
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon(int side, int meta) {
-        if(side <= 1) {
+        if (side <= 1) {
             return blockIcon;
         }
         return Blocks.log.getIcon(side, 0);

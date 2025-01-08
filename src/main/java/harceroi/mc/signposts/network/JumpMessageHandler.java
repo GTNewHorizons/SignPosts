@@ -7,12 +7,12 @@ import harceroi.mc.signposts.SignPostsMod;
 
 public class JumpMessageHandler implements IMessageHandler<JumpMessage, IMessage> {
 
-  @Override
-  public IMessage onMessage(JumpMessage msg, MessageContext ctx) {
+    @Override
+    public IMessage onMessage(JumpMessage msg, MessageContext ctx) {
 
-    SignPostsMod.playerJump(msg.getMarkerId(), ctx.getServerHandler().playerEntity, msg.getPaymentHandler());
+        SignPostsMod.playerJump(msg.getMarkerId(), ctx.getServerHandler().playerEntity, msg.getPaymentHandler());
 
-    return null;
-  }
+        return null;
+    }
 
 }

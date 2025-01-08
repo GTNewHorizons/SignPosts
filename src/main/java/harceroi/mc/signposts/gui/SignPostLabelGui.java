@@ -1,18 +1,18 @@
 package harceroi.mc.signposts.gui;
 
-import harceroi.mc.signposts.network.CreateJumpTargetMessage;
-import harceroi.mc.signposts.network.SignPostsNetworkHelper;
-import hunternif.mc.atlas.client.gui.core.GuiComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 
+import harceroi.mc.signposts.network.CreateJumpTargetMessage;
+import harceroi.mc.signposts.network.SignPostsNetworkHelper;
+import hunternif.mc.atlas.client.gui.core.GuiComponent;
+
 public class SignPostLabelGui extends GuiComponent {
 
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_SPACING = 4;
-
 
     private GuiButton btnDone;
     private GuiButton btnCancel;
@@ -27,15 +27,35 @@ public class SignPostLabelGui extends GuiComponent {
     @SuppressWarnings("unchecked")
     @Override
     public void initGui() {
-        buttonList.add(btnDone = new GuiButton(0, this.width / 2 - BUTTON_WIDTH - BUTTON_SPACING / 2, this.height / 2 + 40, BUTTON_WIDTH, 20, I18n.format("gui.done")));
-        buttonList.add(btnCancel = new GuiButton(0, this.width / 2 + BUTTON_SPACING / 2, this.height / 2 + 40, BUTTON_WIDTH, 20, I18n.format("gui.cancel")));
-        textField = new GuiTextField(Minecraft.getMinecraft().fontRenderer, (this.width - 200) / 2, this.height / 2 - 81, 200, 20);
+        buttonList.add(
+            btnDone = new GuiButton(
+                0,
+                this.width / 2 - BUTTON_WIDTH - BUTTON_SPACING / 2,
+                this.height / 2 + 40,
+                BUTTON_WIDTH,
+                20,
+                I18n.format("gui.done")));
+        buttonList.add(
+            btnCancel = new GuiButton(
+                0,
+                this.width / 2 + BUTTON_SPACING / 2,
+                this.height / 2 + 40,
+                BUTTON_WIDTH,
+                20,
+                I18n.format("gui.cancel")));
+        textField = new GuiTextField(
+            Minecraft.getMinecraft().fontRenderer,
+            (this.width - 200) / 2,
+            this.height / 2 - 81,
+            200,
+            20);
         textField.setFocused(true);
         textField.setText("");
         textField.setMaxStringLength(15);
     }
 
-    public SignPostLabelGui setJumpTargetValues(int signX, int signY, int signZ, double jumpX, double jumpY, double jumpZ) {
+    public SignPostLabelGui setJumpTargetValues(int signX, int signY, int signZ, double jumpX, double jumpY,
+        double jumpZ) {
         this.signX = signX;
         this.signY = signY;
         this.signZ = signZ;
@@ -69,7 +89,14 @@ public class SignPostLabelGui extends GuiComponent {
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button == btnDone) {
-            CreateJumpTargetMessage msg = new CreateJumpTargetMessage(signX, signY, signZ, jumpX, jumpY, jumpZ, textField.getText());
+            CreateJumpTargetMessage msg = new CreateJumpTargetMessage(
+                signX,
+                signY,
+                signZ,
+                jumpX,
+                jumpY,
+                jumpZ,
+                textField.getText());
             SignPostsNetworkHelper.sendCreateJumpTargetMessage(msg);
             close();
         } else if (button == btnCancel) {
@@ -81,7 +108,5 @@ public class SignPostLabelGui extends GuiComponent {
     public boolean doesGuiPauseGame() {
         return false;
     }
-
-
 
 }

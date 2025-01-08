@@ -1,15 +1,16 @@
 package harceroi.mc.signposts.block;
 
-import hunternif.mc.atlas.AntiqueAtlasMod;
-import hunternif.mc.atlas.marker.Marker;
-import hunternif.mc.atlas.marker.MarkersData;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelSign;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.util.ResourceLocation;
+import hunternif.mc.atlas.AntiqueAtlasMod;
+import hunternif.mc.atlas.marker.Marker;
+import hunternif.mc.atlas.marker.MarkersData;
 
 public class SignPostRenderer extends TileEntitySignRenderer {
 
@@ -19,13 +20,13 @@ public class SignPostRenderer extends TileEntitySignRenderer {
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float p_147500_8_) {
         int meta = tileEntity.getBlockMetadata();
-        if(meta >= 4) {
+        if (meta >= 4) {
             return;
         }
 
         float realX = 0.5f, realY = 0.5f, rotation = 0f;
 
-        switch(meta) {
+        switch (meta) {
             case 0:
                 realY += 0.13f;
                 break;
@@ -46,7 +47,7 @@ public class SignPostRenderer extends TileEntitySignRenderer {
         GL11.glPushMatrix();
         float scale = 0.6666667F;
 
-        GL11.glTranslatef((float)x + realX, (float)y + 1.75F * scale, (float)z + realY);
+        GL11.glTranslatef((float) x + realX, (float) y + 1.75F * scale, (float) z + realY);
         GL11.glRotatef(-rotation, 0.0F, 1.0F, 0.0F);
         model.signStick.showModel = false;
 
@@ -63,10 +64,10 @@ public class SignPostRenderer extends TileEntitySignRenderer {
         GL11.glNormal3f(0.0F, 0.0F, -1.0F * newScale);
         GL11.glDepthMask(false);
 
-        SignPostTileEntity signTe = (SignPostTileEntity)tileEntity;
-        if(signTe.text == null) {
+        SignPostTileEntity signTe = (SignPostTileEntity) tileEntity;
+        if (signTe.text == null) {
             int id = signTe.getMarkerId();
-            if(id != 0) {
+            if (id != 0) {
                 MarkersData data = AntiqueAtlasMod.globalMarkersData.getData();
                 Marker marker = data != null ? data.getMarkerByID(id) : null;
                 signTe.text = marker != null ? marker.getLocalizedLabel() : null;
